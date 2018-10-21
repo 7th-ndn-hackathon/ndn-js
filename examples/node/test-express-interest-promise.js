@@ -34,16 +34,10 @@ rl.question("Enter a word to echo: ", function(word) {
   var name = new Name("/testecho");
   name.append(word);
   console.log("Express name " + name.toUri());
-  face.expressInterestPromise(name)
-    .then(function(data) {
-      console.log("Got data packet with name " + data.getName().toUri());
-      console.log("Payload: " + data.getContent().buf().toString("binary"));
-      face.close();
-    })
-    .catch(function(err) {
-      console.log("Error: " + err);
-      face.close();
-    });
-    
+  let data = await face.expressInterestPromise(name);
+  console.log("Got data packet with name " + data.getName().toUri());
+  console.log("Payload: " + data.getContent().buf().toString("binary"));
+  face.close();
+
   rl.close();
 });

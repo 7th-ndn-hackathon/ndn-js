@@ -127,37 +127,7 @@ var DEFAULT_RSA_PRIVATE_KEY_DER = new Buffer([
     0xcb, 0xea, 0x8f
 ]);
 
-var Echo = function Echo(face) {
-  this.face = face;
-};
-
-Echo.prototype.onInterest = function(prefix, interest, face)
-{
-  var data = new Data(interest.getName());
-  var content = "Data for " + interest.getName().toUri();
-  data.setContent(content);
-
-  try {
-    console.log("Sent content " + content);
-    face.putData(data);
-  } catch (e) {
-    console.log(e.toString());
-  }
-  this.face.close(); 
-};
-
-Echo.prototype.onRegisterFailed = function(prefix)
-{
-  console.log("Register failed for prefix " + prefix.toUri());
-  this.face.close();  // This will cause the script to quit.
-};
-
-Echo.prototype.onRegisterSuccess = function(prefix)
-{
-  console.log(prefix.toUri() + " registered successfully.");
-};
-
-function main()
+async function main()
 {
   // Connect to the local forwarder with a Unix socket.
   var face = new Face(new UnixTransport());
@@ -178,34 +148,30 @@ function main()
   var prefix = new Name("/testecho");
 
   console.log("Register prefix " + prefix.toUri());
-  face.registerPrefixPromise(prefix)
-  .then(res => {
-      face.setInterestFilter(prefix, (prefix, interest) => {    
-        var data = new Data(interest.getName());
-        var content = "Data for " + interest.getName().toUri();
-        data.setContent(content);
-      
-        try {
-          console.log("Sent content " + content);
-          face.putData(data);
-        } catch (e) {
-          console.log(e.toString());
-        }
-
-        setTimeout(() => {
-            console.log("UNREGISTER");
-            res.unregister().then(() => {
-                console.log("DONE");
-                face.close();
-            });
-        }, 2000);
-      });
-  })
-  .catch( prefix => {
-    console.log("Register failed for prefix " + prefix.toUri());
-    face.close();  // This will cause the script to quit.
+  let rp = await face.registerPrefixPromise(prefix);
+  face.setInterestFilter(prefix, (prefix, interest) => {    
+    var data = new Data(interest.getName());
+    var content = "Data for " + interest.getName().toUri();
+    data.setContent(content);
+    
+    try {
+        console.log("Sent content " + content);
+        face.putData(data);
+    } catch (e) {
+        console.log(e.toString());
+    }
   });
+
+  setTimeout(async () => {
+    console.log("UNREGISTER");
+    await rp.unregister();
+    console.log("DONE");
+    face.close();
+  }, 2000);
 
 }
 
-main();
+main()
+.catch(err => {
+    console.log(err);
+})
