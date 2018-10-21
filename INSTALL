@@ -9,10 +9,20 @@ browser, include build/ndn.js. See the examples in examples/browser.
 To use the library in Node.js, require index.js at the top of the distribution tree.
 See the examples programs in examples/node.
 
-BUILD A COMBINED, COMPRESSED LIBRARY 
+BUILD WITH BROWSERIFY
+=====================
+
+Run these two commands to build the library with browserify:
+
+    npm install
+    npm run browserify
+
+The result is written to `build/ndn.js` uncompressed.
+
+BUILD A COMBINED, COMPRESSED LIBRARY
 ====================================
 
-While the combined file ndn.js is useful for debugging, a more efficient way to include the library 
+While the combined file ndn.js is useful for debugging, a more efficient way to include the library
 is to used the combined, compressed library build/ndn.min.js.
 While we try to keep a built version in that directory for convenience, it
 may fall out of sync with the library, so we recommend building it as follows if possible.
@@ -23,7 +33,7 @@ To create a combined and compressed versions of NDN-JS scripts:
     ./waf configure
     ./waf
 
-These commands will create a combined version build/ndn.js, and combined version build/ndn.min.js, compressed 
+These commands will create a combined version build/ndn.js, and combined version build/ndn.min.js, compressed
 using  Google's Closure Compiler.
 
 The compressed version is what we recommend including in applications.

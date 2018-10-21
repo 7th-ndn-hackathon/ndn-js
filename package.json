@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "scripts": {
+    "browserify": "bash browserify.sh",
     "test": "cd tests/node/unit-tests ; mocha . --timeout 10000 ; cd ../../.."
   },
   "repository": {
@@ -28,10 +29,12 @@
     "url": "https://github.com/named-data/ndn-js/issues"
   },
   "dependencies": {
+    "buffer": "^5.2.1",
     "jsbn": "*",
     "protobufjs": "*"
   },
   "devDependencies": {
+    "browserify": "^16.2.3",
     "buffer": "^5.2.1",
     "mocha": "*"
   }
