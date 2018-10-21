@@ -405,6 +405,30 @@ Face.prototype.expressInterest = function
 };
 
 /**
+ * Promise wrapper for expressInterest function
+ *
+ * @param interest or name
+ */
+
+Face.prototype.expressInterestPromise = function(interest) {
+  let promise = new Promise((resolve, reject) => {
+    this.expressInterest(
+      interest,
+      (interest1, data) => {
+        resolve(data);
+      },
+      interest1 => {
+        reject(interest1.getName() + "Timeout");
+      },
+      (interest1, nack) => {
+        reject("NACK, reason: " + nack);
+      }
+    );
+  });
+  return promise;
+};
+
+/**
  * If the host and port are different than the ones in this.transport, then call
  *   this.transport.connect to change the connection (or connect for the first time).
  * Then call expressInterestHelper.
@@ -669,6 +693,34 @@ Face.prototype.registerPrefix = function
 
   return registeredPrefixId;
 };
+
+/**
+ * Promise wrapper for registerPrefix function
+ * 
+ * @param prefix
+ */
+
+Face.prototype.registerPrefixPromise = function(prefix, onInterest) {
+  let promise = new Promise((resolve, reject) => {
+    this.registerPrefix(
+      prefix,
+      onInterest,
+      (prefix1) => {
+        reject(prefix1);
+      },
+      (prefix1, id) => {
+        resolve({
+          unregister : () => {
+            this.removePendingInterest(id);
+            return Promise.resolve();
+          }
+        });
+      }
+    );
+  });
+  return promise;
+};
+
 
 /**
  * Get the practical limit of the size of a network-layer packet. If a packet
