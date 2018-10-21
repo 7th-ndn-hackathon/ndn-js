@@ -19,7 +19,7 @@
   ],
   "browser": {
     "./js/crypto.js": "./js/browserify.js",
-    "./js/use-subtle-crypto-node.js":"./js/use-subtle-crypto.js",
+    "./js/use-subtle-crypto-node.js": "./js/use-subtle-crypto.js",
     "./js/transport/tcp-transport.js": "./js/browserify-tcp-transport.js"
   },
   "author": "UCLA",
@@ -32,6 +32,7 @@
     "protobufjs": "*"
   },
   "devDependencies": {
+    "buffer": "^5.2.1",
     "mocha": "*"
   }
 }

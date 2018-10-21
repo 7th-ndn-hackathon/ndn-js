@@ -1,3 +1,4 @@
+exports.Buffer = require('buffer').Buffer;
 exports.Face = require('./js/face.js').Face;
 exports.Name = require('./js/name.js').Name;
 exports.ComponentType = require('./js/name.js').ComponentType;
